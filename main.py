@@ -1,9 +1,8 @@
+from sqlalchemy.orm.attributes import flag_modified
+
 from db.db import alchemy_db
 from db.enums import PhraseType
 from db.models import History, Part, Phrase
-
-
-# session = alchemy_db.session
 
 
 def test(scenario_id, p0_id, p1_id):
@@ -12,7 +11,7 @@ def test(scenario_id, p0_id, p1_id):
     counter = 0
 
     while part := get_last_part(history_id):
-        print(f'#{counter}{part["question"]["file_id"]}')
+        print(f'#{counter} {part["question"]["file_id"]}')
         for i, answer in enumerate(part['answers']):
             print(f'[{i}] {answer["file_id"]}')
         answer = input()
@@ -65,6 +64,8 @@ def add_answer(answer, history_id, part_range):
     h = History.query.get(history_id)
     h.data['parts'][part_range]['answer'] = answer
     h.data['parts'].append(get_new_part_data(h.scenario_id, len(h.data['parts'])))
+    flag_modified(h, 'data')
+    session.add(h)
     session.commit()
 
 

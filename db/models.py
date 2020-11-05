@@ -1,6 +1,7 @@
 import datetime
 
-from sqlalchemy import Integer, Column, String, Text, Enum, Table, ForeignKey, JSON, DateTime
+from sqlalchemy import Integer, Column, String, Text, Enum, Table, ForeignKey, DateTime
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 
 from db.db import alchemy_db
@@ -69,7 +70,7 @@ class History(alchemy_db.Model):
     scenario_id = Column(Integer)
     questioner_id = Column(Integer)
     answerer_id = Column(Integer)
-    data = Column(JSON)
+    data = Column(JSONB)
     start_date = Column(DateTime, default=datetime.datetime.utcnow)
     end_date = Column(DateTime)
 
