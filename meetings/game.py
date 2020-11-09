@@ -16,8 +16,8 @@ class Game:
 
         h = History(
             scenario_id=scenario_id,
-            questioner_id=p0_id,
-            answerer_id=p1_id,
+            # questioner_id=p0_id,
+            # answerer_id=p1_id,
             data={'parts': [first_part]}
         )
 
@@ -28,8 +28,8 @@ class Game:
         return h.id
 
     @staticmethod
-    def get_last_part(history_id):
-        return History.query.get(history_id).data['parts'][-1]
+    def get_history_data(history_id):
+        return History.query.get(history_id).data
 
     @staticmethod
     def get_new_part_data(scenario_id, part_range):
@@ -51,6 +51,11 @@ class Game:
     def add_answer(answer, history_id, part_range):
         session = alchemy_db.session
         h = History.query.get(history_id)
+        parts = h.data['parts']
+
+        if parts and parts[-1] is None:
+            return
+
         h.data['parts'][part_range]['answer'] = answer
         h.data['parts'].append(Game.get_new_part_data(h.scenario_id, len(h.data['parts'])))
         flag_modified(h, 'data')

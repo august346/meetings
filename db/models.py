@@ -44,11 +44,11 @@ class Part(alchemy_db.Model):
 class Phrase(alchemy_db.Model):
     id = Column(Integer, primary_key=True)
     context = Column(Enum(PhraseType))
-    title = Column(String(80), unique=True, nullable=False)
+    title = Column(String(80), nullable=False)
     file_id = Column(Text, nullable=False)
 
-    player_id = Column(Integer, ForeignKey('player.id'))
-    player = relationship('Player', back_populates='phrases')
+    # player_id = Column(Integer, ForeignKey('player.id'))
+    # player = relationship('Player', back_populates='phrases')
 
     parts = relationship(
         'Part',
@@ -58,6 +58,7 @@ class Phrase(alchemy_db.Model):
 
     def as_dict(self):
         return {
+            'id': self.id,
             'title': self.title,
             'file_id': self.file_id
         }
@@ -69,20 +70,20 @@ class History(alchemy_db.Model):
     start_date = Column(DateTime, default=datetime.datetime.utcnow)
     end_date = Column(DateTime)
 
-    questioner_id = Column(Integer, ForeignKey('player.id'))
-    questioner = relationship('Player', back_populates='q_histories')
-
-    answerer_id = Column(Integer, ForeignKey('player.id'))
-    answerer = relationship('Player', back_populates='a_histories')
+    # questioner_id = Column(Integer, ForeignKey('player.id'))
+    # questioner = relationship('Player', back_populates='q_histories')
+    #
+    # answerer_id = Column(Integer, ForeignKey('player.id'))
+    # answerer = relationship('Player', back_populates='a_histories')
 
     scenario_id = Column(Integer, ForeignKey('scenario.id'))
     scenario = relationship('Scenario', back_populates='histories')
 
 
-class Player(alchemy_db.Model):
-    id = Column(Integer, primary_key=True)
-    nick_name = Column(String(80), nullable=False)
-
-    q_histories = relationship('History', back_populates='questioner')
-    a_histories = relationship('History', back_populates='answerer')
-    phrases = relationship('Phrase', back_populates='player')
+# class Player(alchemy_db.Model):
+#     id = Column(Integer, primary_key=True)
+#     nick_name = Column(String(80), nullable=False)
+#
+#     q_histories = relationship('History', back_populates='questioner')
+#     a_histories = relationship('History', back_populates='answerer')
+#     phrases = relationship('Phrase', back_populates='player')
